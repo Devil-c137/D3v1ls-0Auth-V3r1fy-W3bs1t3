@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord OAuth - Verified</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            color: #00ff00;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>You have been verified</h1>
+        <div class="success" id="status">Processing authorization...</div>
+    </div>
+
+    <script>
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                code: params.get('code'),
+                state: params.get('state'),
+                error: params.get('error')
+            };
+        }
+
+        function processCallback() {
+            const params = getUrlParams();
+            const statusElement = document.getElementById('status');
+            
+            if (params.error) {
+                statusElement.textContent = 'Authorization failed. Please try again.';
+                statusElement.style.color = '#ff0000';
+                return;
+            }
+            
+            if (params.code) {
+                statusElement.textContent = 'Authorization successful! You can close this window.';
+                statusElement.style.color = '#00ff00';
+                
+                // Send authorization code to your bot (you'll need to implement this)
+                console.log('Authorization code:', params.code);
+                
+                // Optional: Auto-close window after 3 seconds
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
+            } else {
+                statusElement.textContent = 'No authorization code received.';
+                statusElement.style.color = '#ffaa00';
+            }
+        }
+
+        // Process callback when page loads
+        window.addEventListener('DOMContentLoaded', processCallback);
+    </script>
+</body>
+</html>
